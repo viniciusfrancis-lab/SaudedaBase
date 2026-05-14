@@ -163,3 +163,4 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/.github/dados/EMPILHADO_MATRICULAS.parquet
 dados/EMPILHADO_MATRICULAS.parquet
+.github/dados/EMPILHADO_MATRICULAS.parquet
