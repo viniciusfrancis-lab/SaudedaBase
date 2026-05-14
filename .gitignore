@@ -164,3 +164,5 @@ cython_debug/
 #.idea/.github/dados/EMPILHADO_MATRICULAS.parquet
 dados/EMPILHADO_MATRICULAS.parquet
 .github/dados/EMPILHADO_MATRICULAS.parquet
+dados/EMPILHADO_MATRICULAS.parquet
+.github/dados/EMPILHADO_MATRICULAS.parquet
