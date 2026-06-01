@@ -39,13 +39,14 @@ st.markdown(f"""
 
   /* Header institucional */
   .sedu-header {{
-    background: {TEAL_DARK};
-    padding: 14px 22px;
+    background: linear-gradient(135deg, #0F172A 0%, #164E63 100%);
+    padding: 20px 24px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     min-height: 60px;
-    border-radius: 10px;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.15);
   }}
   .sedu-header-left {{
     display: flex;
@@ -206,6 +207,23 @@ st.markdown(f"""
 </style>
 """, unsafe_allow_html=True)
 
+# ── CSS dos KPI cards (estilo painel BI) ──────────────────────────────────────
+st.markdown("""
+<style>
+  .stApp { background-color:#F8FAFC; }
+  .kpi-card {
+    background:white;
+    border-radius:16px;
+    padding:18px;
+    box-shadow:0 2px 12px rgba(0,0,0,.05);
+    border:1px solid #E5E7EB;
+  }
+  .kpi-label { font-size:13px; color:#64748B; margin-bottom:8px; }
+  .kpi-value { font-size:32px; font-weight:700; color:#0F172A; }
+  .kpi-icon  { font-size:22px; }
+</style>
+""", unsafe_allow_html=True)
+
 
 # ── Dados ─────────────────────────────────────────────────────────────────────
 RESUMO_PATH          = Path(__file__).parent / "dados_graficos" / "resumo.parquet"
@@ -251,6 +269,13 @@ def carregar_dados():
 df = carregar_dados()
 total = int(df["qtd"].sum())
 
+# Total de alunos (célula B2 do xlsx) — calculado cedo para uso nos KPIs e no gráfico
+try:
+    _df_xlsx = pd.read_excel(Path(__file__).parent / "dados_graficos" / "dados_graficos.xlsx", header=None)
+    total_alunos = int(_df_xlsx.iloc[1, 1])
+except Exception:
+    total_alunos = int(df["qtd"].max() * 1.15)
+
 # Última atualização
 from datetime import datetime
 ultima_atualizacao = datetime.now().strftime("%d/%m/%Y %H:%M")
@@ -284,16 +309,49 @@ st.markdown(f"""
 """, unsafe_allow_html=True)
 
 
-# ── Banner ────────────────────────────────────────────────────────────────────
-st.markdown(f"""
-<div class="sedu-banner">
-  <div style="font-size:22px; color:rgba(255,255,255,0.85);">⚠</div>
-  <div>
-    <div class="sedu-banner-num">{f"{total:,}".replace(",", ".")}</div>
-    <div class="sedu-banner-label">alertas carregados nesta atualização</div>
-  </div>
-</div>
-""", unsafe_allow_html=True)
+# ── KPIs (substitui o banner) ─────────────────────────────────────────────────
+impacto = round((total / total_alunos) * 100, 1) if total_alunos else 0.0
+
+if impacto >= 20:
+    situacao = "🔴 Crítica"
+elif impacto >= 10:
+    situacao = "🟡 Atenção"
+else:
+    situacao = "🟢 Normal"
+
+col1, col2, col3, col4 = st.columns(4)
+
+with col1:
+    st.markdown(f"""
+    <div class="kpi-card">
+        <div class="kpi-label">⚠ Alertas</div>
+        <div class="kpi-value">{total:,}</div>
+    </div>
+    """.replace(",", "."), unsafe_allow_html=True)
+
+with col2:
+    st.markdown(f"""
+    <div class="kpi-card">
+        <div class="kpi-label">👨‍🎓 Alunos</div>
+        <div class="kpi-value">{total_alunos:,}</div>
+    </div>
+    """.replace(",", "."), unsafe_allow_html=True)
+
+with col3:
+    st.markdown(f"""
+    <div class="kpi-card">
+        <div class="kpi-label">📊 Impacto</div>
+        <div class="kpi-value">{impacto}%</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+with col4:
+    st.markdown(f"""
+    <div class="kpi-card">
+        <div class="kpi-label">🚦 Situação</div>
+        <div class="kpi-value" style="font-size:22px">{situacao}</div>
+    </div>
+    """, unsafe_allow_html=True)
 
 
 # ── Corpo ─────────────────────────────────────────────────────────────────────
@@ -312,12 +370,28 @@ st.markdown('<p class="sedu-section-title">visão geral</p>', unsafe_allow_html=
 # Grid responsivo: cards se ajustam à largura disponível e quebram para a
 # próxima linha quando não couberem mais (auto-fill + minmax no CSS).
 cards_html = ['<div class="sedu-cards-grid">']
+
+ICONS = {
+    "Datas de Matrícula Alterada":            "📅",
+    "Ausência e retorno (freq. io-iô)":       "⚠️",
+    "Alunos Desenturmado":                    "🎓",
+    "Matrícula Retroativa":                   "📝",
+    "Alunos com ID Alterado":                 "🆔",
+    "Alunos sem CPF":                         "📄",
+    "Sem Autodeclaração Racial":              "👤",
+    "Flag Deficiência sem Descrição":         "♿",
+    "Descrição de Deficiência Inconsistente": "🔍",
+    "Matrículas Duplicadas":                  "📚",
+}
+
 for row in df.itertuples():
     ccls = CARD_CLS[row.prioridade]
     vcls = VAL_CLS[row.prioridade]
     valor_fmt = f"{row.qtd:,}".replace(",", ".")
+    icone = ICONS.get(row.alerta, "📌")
     cards_html.append(
         f'<div class="sedu-card {ccls}">'
+        f'<div style="font-size:22px;margin-bottom:8px;">{icone}</div>'
         f'<p class="sedu-card-label" title="{row.alerta}">{row.alerta}</p>'
         f'<p class="sedu-card-value {vcls}">{valor_fmt}</p>'
         f'</div>'
@@ -328,13 +402,6 @@ st.markdown("".join(cards_html), unsafe_allow_html=True)
 
 # Seção: gráfico
 st.markdown('<p class="sedu-section-title" style="margin-top:1.5rem;">total de alertas por categoria</p>', unsafe_allow_html=True)
-
-# Lê total de alunos da célula B2 do xlsx
-try:
-    _df_xlsx = pd.read_excel(Path(__file__).parent / "dados_graficos" / "dados_graficos.xlsx", header=None)
-    total_alunos = int(_df_xlsx.iloc[1, 1])
-except Exception:
-    total_alunos = int(df["qtd"].max() * 1.15)
 
 bar_colors = [
     ROSE if p == "alta" else (TEAL if p == "média" else GREEN)
@@ -392,6 +459,29 @@ legend_html = f"""
 """
 st.markdown(f'<div style="background:#fff; border:0.5px solid #d4e9ee; border-radius:10px; padding:14px 18px;">{legend_html}</div>', unsafe_allow_html=True)
 st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
+
+
+# ── Donut: distribuição das prioridades ───────────────────────────────────────
+st.markdown('<p class="sedu-section-title">distribuição das prioridades</p>', unsafe_allow_html=True)
+
+prioridades = df.groupby("prioridade")["qtd"].sum().reset_index()
+
+cores = {"alta": "#EF4444", "média": "#F59E0B", "baixa": "#10B981"}
+
+fig_donut = go.Figure(go.Pie(
+    labels=prioridades["prioridade"],
+    values=prioridades["qtd"],
+    hole=0.70,
+    marker=dict(colors=[cores.get(p, "#94A3B8") for p in prioridades["prioridade"]]),
+))
+fig_donut.update_layout(
+    height=450,
+    paper_bgcolor="white",
+    plot_bgcolor="white",
+    margin=dict(t=20, b=20, l=20, r=20),
+    showlegend=True,
+)
+st.plotly_chart(fig_donut, use_container_width=True)
 
 
 
@@ -514,8 +604,6 @@ components.html(html_estilizado, height=850, scrolling=False)
 ##########  FECHAR GRAFICO SANKEY  ###########################
 
 # ── Seção: detalhamento por aluno (resultados.parquet) ───────────────────────
-st.markdown('<p class="sedu-section-title" style="margin-top:1.5rem;">detalhamento</p>', unsafe_allow_html=True)
-
 PARQUET_RESULTADOS = Path(__file__).parent / "dados_graficos" / "resultados.parquet"
 
 COLUNAS_EXIBIR = [
@@ -534,6 +622,38 @@ def carregar_resultados():
     return df_r[cols].copy()
 
 df_res = carregar_resultados()
+
+# ── Ranking de escolas ────────────────────────────────────────────────────────
+if "nm_escola" in df_res.columns:
+    st.markdown('<p class="sedu-section-title">ranking de escolas</p>', unsafe_allow_html=True)
+
+    ranking = (
+        df_res
+        .groupby("nm_escola")
+        .size()
+        .reset_index(name="alertas")
+        .sort_values("alertas", ascending=False)
+        .head(15)
+    )
+
+    fig_rank = go.Figure()
+    fig_rank.add_trace(go.Bar(
+        x=ranking["alertas"],
+        y=ranking["nm_escola"],
+        orientation="h",
+        text=ranking["alertas"],
+        textposition="outside",
+    ))
+    fig_rank.update_layout(
+        height=500,
+        template="plotly_white",
+        yaxis=dict(autorange="reversed"),
+        title="Top 15 Escolas com Mais Alertas",
+    )
+    st.plotly_chart(fig_rank, use_container_width=True)
+
+# ── Detalhamento ──────────────────────────────────────────────────────────────
+st.markdown('<p class="sedu-section-title" style="margin-top:1.5rem;">detalhamento</p>', unsafe_allow_html=True)
 
 # ── Filtros encadeados ────────────────────────────────────────────────────────
 col_f1, col_f2, col_f3, col_dl = st.columns([2, 2, 3, 1])
