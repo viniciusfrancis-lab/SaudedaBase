@@ -1,4 +1,4 @@
-#carregador.py
+# carregador.py
 import pandas as pd
 
 COLUNAS_OBRIGATORIAS = ["cpf", "id_aluno", "id_turma", "nm_aluno", "data_nascimento"]
@@ -6,14 +6,12 @@ COLUNAS_OBRIGATORIAS = ["cpf", "id_aluno", "id_turma", "nm_aluno", "data_nascime
 
 def carregar_base(nome_arquivo) -> pd.DataFrame:
     """
-    Lê uma base de base de empilhada alunos.
+    Lê uma base empilhada de alunos.
     """
-
     df = pd.read_parquet(nome_arquivo)
-
     df.columns = df.columns.str.strip().str.lower()
-
     return df
+
 
 # filtro geral para outros alertas
 def aplicar_filtros(df: pd.DataFrame) -> pd.DataFrame:
@@ -34,7 +32,8 @@ def aplicar_filtros(df: pd.DataFrame) -> pd.DataFrame:
 
     return df.reset_index(drop=True)
 
-#filtro exclusivo para o CPF, tipo que atendimento sao todos
+
+# filtro exclusivo para o CPF — tipo_atendimento inclui todos
 def aplicar_filtros_cpf(df: pd.DataFrame) -> pd.DataFrame:
     # Apenas registros do ano letivo 2026 (exceto MEPES)
     anos_2026 = [v for v in df["num_ano_letivo"].unique() if "2026" in str(v)]
@@ -49,6 +48,6 @@ def aplicar_filtros_cpf(df: pd.DataFrame) -> pd.DataFrame:
     df = df[df["data_encerramento_matricula"].isna()]
 
     # Remove linhas onde id_aluno já apareceu antes
-    df = df.drop_duplicates(subset=['id_aluno'], keep='first')
+    df = df.drop_duplicates(subset=["id_aluno"], keep="first")
 
     return df.reset_index(drop=True)
