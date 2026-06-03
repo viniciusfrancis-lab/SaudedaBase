@@ -51,11 +51,7 @@ COLUNAS_EXCEL = [
     "Matricula_Retroativa", "Detalhe_Retroativa",
     "IDs", "Status_ID", "Detalhe_Mudanca_ID",
     "Status_Matricula", "Detalhe_Mudanca_Matricula",
-<<<<<<< HEAD
     "Status_Frequencia", "Detalhe_Frequencia","Data_Retorno",
-=======
-    "Status_Frequencia", "Detalhe_Frequencia",
->>>>>>> c382a788aecb11f6e1ce22bd4da61dc34a177237
     "Primeira_Aparicao", "Ultima_Aparicao", "Total_Semanas",
 ]
 
@@ -224,10 +220,7 @@ def _regra_ioio(df: pl.DataFrame, datas_semanas: list) -> pl.DataFrame:
         if len(sems) < 2:
             continue
         gaps = []
-<<<<<<< HEAD
         ultima_data_retorno = None               # <-- inicializa antes do loop
-=======
->>>>>>> c382a788aecb11f6e1ce22bd4da61dc34a177237
         for j in range(len(sems) - 1):
             pa = pos_map.get(sems[j])
             pb = pos_map.get(sems[j + 1])
@@ -235,10 +228,7 @@ def _regra_ioio(df: pl.DataFrame, datas_semanas: list) -> pl.DataFrame:
                 continue
             if pb > pa + 1:
                 faltantes = [datas_semanas[k].strftime("%d/%m/%Y") for k in range(pa + 1, pb)]
-<<<<<<< HEAD
                 ultima_data_retorno = sems[j + 1]   # <-- sobrescreve a cada gap
-=======
->>>>>>> c382a788aecb11f6e1ce22bd4da61dc34a177237
                 gaps.append(
                     f"Ausente entre {sems[j].strftime('%d/%m/%Y')} "
                     f"e {sems[j+1].strftime('%d/%m/%Y')} "
@@ -250,28 +240,18 @@ def _regra_ioio(df: pl.DataFrame, datas_semanas: list) -> pl.DataFrame:
                 "nasc_str": row["nasc_str"],
                 "Status_Frequencia": "Io-iô",
                 "Detalhe_Frequencia": " | ".join(gaps),
-<<<<<<< HEAD
                 "Data_Retorno": ultima_data_retorno,   # <-- objeto date
-=======
->>>>>>> c382a788aecb11f6e1ce22bd4da61dc34a177237
             })
 
     if not registros:
         return pl.DataFrame(schema={
             "nm_aluno": pl.Utf8, "nasc_str": pl.Utf8,
             "Status_Frequencia": pl.Utf8, "Detalhe_Frequencia": pl.Utf8,
-<<<<<<< HEAD
             "Data_Retorno": pl.Date,                   # <-- pl.Date, não pl.Utf8
         })
      
     return pl.DataFrame(registros)
 
-=======
-        })
-    return pl.DataFrame(registros)
-
-
->>>>>>> c382a788aecb11f6e1ce22bd4da61dc34a177237
 # =============================================================================
 # REGRA 3A — MUDANÇA DE ID INTERNA
 # =============================================================================
@@ -430,10 +410,7 @@ def _regra_unificacao_id(df: pl.DataFrame, datas_semanas: list) -> pl.DataFrame:
 # =============================================================================
 # REGRA 4 — ALTERAÇÃO EM DT_MATRICULA
 # =============================================================================
-<<<<<<< HEAD
 
-=======
->>>>>>> c382a788aecb11f6e1ce22bd4da61dc34a177237
 def _regra_dt_matricula(df: pl.DataFrame) -> pl.DataFrame:
     mat_semana = (
         df.filter(pl.col("dt_matricula_dt").is_not_null())
@@ -442,7 +419,6 @@ def _regra_dt_matricula(df: pl.DataFrame) -> pl.DataFrame:
           .sort(["nm_aluno", "nasc_str", "semana"])
     )
 
-<<<<<<< HEAD
     mat_semana = mat_semana.with_columns(
         pl.col("min_dt_mat").shift(1).over(["nm_aluno", "nasc_str"]).alias("dt_ant")
     )
@@ -462,20 +438,11 @@ def _regra_dt_matricula(df: pl.DataFrame) -> pl.DataFrame:
     ])
 
     if mudancas.is_empty():
-=======
-    alunos_multi = (
-        mat_semana.group_by(["nm_aluno", "nasc_str"])
-                  .agg(pl.col("semana").count().alias("n_sem"))
-                  .filter(pl.col("n_sem") > 1)
-    )
-    if alunos_multi.is_empty():
->>>>>>> c382a788aecb11f6e1ce22bd4da61dc34a177237
         return pl.DataFrame(schema={
             "nm_aluno": pl.Utf8, "nasc_str": pl.Utf8,
             "Status_Matricula": pl.Utf8, "Detalhe_Mudanca_Matricula": pl.Utf8,
         })
 
-<<<<<<< HEAD
     return (
         mudancas
         .group_by(["nm_aluno", "nasc_str"])
@@ -487,45 +454,6 @@ def _regra_dt_matricula(df: pl.DataFrame) -> pl.DataFrame:
             pl.col("detalhe_evento").last().alias("Detalhe_Mudanca_Matricula"),
         ])
     )
-=======
-    registros = []
-    for aluno in alunos_multi.iter_rows(named=True):
-        sems = (
-            mat_semana.filter(
-                (pl.col("nm_aluno") == aluno["nm_aluno"])
-                & (pl.col("nasc_str") == aluno["nasc_str"])
-            ).to_dicts()
-        )
-        status, detalhe = "Ok", ""
-        for j in range(1, len(sems)):
-            d_ant = sems[j-1]["min_dt_mat"]
-            d_atu = sems[j]["min_dt_mat"]
-            if d_ant and d_atu and d_ant != d_atu:
-                if d_atu < d_ant:
-                    status = "ALERTA: Retrocedeu"
-                elif status == "Ok":
-                    status = "Alterada (Avançou)"
-                detalhe = (
-                    f"Em {sems[j]['semana'].strftime('%d/%m/%Y')} passou de "
-                    f"{d_ant.strftime('%d/%m/%Y')} para {d_atu.strftime('%d/%m/%Y')}"
-                )
-        if status != "Ok":
-            registros.append({
-                "nm_aluno": aluno["nm_aluno"],
-                "nasc_str": aluno["nasc_str"],
-                "Status_Matricula": status,
-                "Detalhe_Mudanca_Matricula": detalhe,
-            })
-
-    if not registros:
-        return pl.DataFrame(schema={
-            "nm_aluno": pl.Utf8, "nasc_str": pl.Utf8,
-            "Status_Matricula": pl.Utf8, "Detalhe_Mudanca_Matricula": pl.Utf8,
-        })
-    return pl.DataFrame(registros)
-
-
->>>>>>> c382a788aecb11f6e1ce22bd4da61dc34a177237
 # =============================================================================
 # CONSOLIDAÇÃO WIDE
 # =============================================================================
@@ -667,12 +595,8 @@ def _wide_para_long(df_wide: pd.DataFrame) -> pd.DataFrame:
                            "detalhe": r["Detalhe_Mudanca_ID"]})
         if r.get("Status_Frequencia", "Regular") == "Io-iô":
             linhas.append({**base, "alerta": ALERTA_IOIO,
-<<<<<<< HEAD
                             "detalhe": r["Detalhe_Frequencia"],
                             "data_retorno": r.get("Data_Retorno", None)})
-=======
-                           "detalhe": r["Detalhe_Frequencia"]})
->>>>>>> c382a788aecb11f6e1ce22bd4da61dc34a177237
     return pd.DataFrame(linhas)
 
 
@@ -739,12 +663,9 @@ def _executar_pipeline(verbose: bool = False) -> tuple[pd.DataFrame, pd.DataFram
 
     _log("Consolidando resultados...")
     df_wide = _consolidar_wide(df, r1, r2, r3a, r3b, r4).to_pandas()
-<<<<<<< HEAD
     print("COLUNAS WIDE:", df_wide.columns.tolist())
     if "Data_Retorno" in df_wide.columns:
         print(df_wide[df_wide["Status_Frequencia"] == "Io-iô"][["Nome_Estudante", "Data_Retorno"]].head())
-=======
->>>>>>> c382a788aecb11f6e1ce22bd4da61dc34a177237
 
     if df_wide.empty:
         _ok(f"Nenhuma inconsistência em {n_alunos:,} alunos.")

@@ -23,11 +23,8 @@ ALERTA_RETROATIVA      = "Matrícula retroativa"
 ALERTA_MUDANCA_ID      = "Mudança de id_aluno"
 ALERTA_IOIO            = "Frequência io-iô"
 ALERTA_ULTIMA_APARICAO = "Última aparição anterior a hoje"
-<<<<<<< HEAD
 ALERTA_DEIXOU_FREQUENTAR = "Deixou de frequentar - última aparição"#
 ALERTA_TRANSFERIDO = "Transferido - última aparição"#
-=======
->>>>>>> c382a788aecb11f6e1ce22bd4da61dc34a177237
 
 ALERTAS_AUDITORIA = {
     ALERTA_DT_MATRICULA,
