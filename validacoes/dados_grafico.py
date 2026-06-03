@@ -5,6 +5,7 @@ Módulo para gerar métricas da base carregada via pygei.
 Executa silenciosamente no app.py sem exibir nada na UI.
 """
 
+<<<<<<< HEAD
 import traceback
 import pandas as pd
 from pathlib import Path
@@ -80,6 +81,64 @@ def gerar_relatorio(df: pd.DataFrame) -> pd.DataFrame:
     except Exception as erro:
         print(f"[dados_grafico] Erro ao salvar relatório: {erro}")
         traceback.print_exc()
+=======
+import pandas as pd
+from pathlib import Path
+from datetime import datetime
+from openpyxl import load_workbook
+
+
+def checar_alunos_total(df: pd.DataFrame) -> int:
+    """Retorna total de alunos únicos."""
+    
+    if "nm_aluno" not in df.columns:
+        return 0
+
+    return df["nm_aluno"].nunique()
+
+
+def gerar_relatorio(df: pd.DataFrame) -> pd.DataFrame:
+
+    resultados = {
+        "Funcao": [
+            "checar_alunos_total"
+        ],
+
+        "Resultado": [
+            len(df["nm_aluno"].unique())
+        ]
+    }
+
+    relatorio = pd.DataFrame(resultados)
+
+    try:
+        pasta_saida = Path("dados_graficos")
+        pasta_saida.mkdir(parents=True, exist_ok=True)
+
+        arquivo_saida = pasta_saida / "dados_graficos.xlsx"
+
+        # Salva DataFrame
+        relatorio.to_excel(
+            arquivo_saida,
+            index=False,
+            engine="openpyxl"
+        )
+
+        # Abre o Excel novamente
+        wb = load_workbook(arquivo_saida)
+        ws = wb.active
+
+        # Escreve data/hora na célula A10
+        data_hora = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+
+        ws["A10"] = f"Última atualização: {data_hora}"
+
+        # Salva alterações
+        wb.save(arquivo_saida)
+
+    except Exception as erro:
+        print(f"Erro ao salvar relatório: {erro}")
+>>>>>>> c382a788aecb11f6e1ce22bd4da61dc34a177237
 
     return relatorio
 
@@ -102,6 +161,7 @@ def executar_silenciosamente(df: pd.DataFrame) -> dict:
         }
 
     except Exception as erro:
+<<<<<<< HEAD
         print(f"[dados_grafico] Erro na execução silenciosa: {erro}")
         traceback.print_exc()
 
@@ -163,3 +223,10 @@ if __name__ == "__main__":
 
     print("\nResultado:")
     print(resultado)
+=======
+        print(f"Erro na execução silenciosa: {erro}")
+
+        return {
+            "alunos_total": 0
+        }
+>>>>>>> c382a788aecb11f6e1ce22bd4da61dc34a177237

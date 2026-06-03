@@ -1,21 +1,13 @@
 import streamlit as st
 import streamlit.components.v1 as components
 import pandas as pd
-<<<<<<< HEAD
-import polars as pl
-=======
->>>>>>> c382a788aecb11f6e1ce22bd4da61dc34a177237
 import plotly.graph_objects as go
 from pathlib import Path
 
 # ── Configuração da página ────────────────────────────────────────────────────
 st.set_page_config(
     page_title="Painel de Alertas — SEDU",
-<<<<<<< HEAD
-    page_icon="📊",
-=======
     page_icon="https://cdn.es.gov.br/images/logo/governo/brasao/right/Brasao_Governo_100.png",
->>>>>>> c382a788aecb11f6e1ce22bd4da61dc34a177237
     layout="wide",
 )
 
@@ -32,7 +24,6 @@ GREEN_DARK = "#0F6E56"
 MUTED      = "#718096"
 TEXT       = "#2d3748"
 
-<<<<<<< HEAD
 # Cores de prioridade (vivas, para badges e realces)
 PRIO_HIGH      = "#e05a6d"
 PRIO_HIGH_BG   = "#fdeef0"
@@ -55,8 +46,6 @@ ALERTA_ICON = {
     "Matrículas Duplicadas":                    "📑",
 }
 
-=======
->>>>>>> c382a788aecb11f6e1ce22bd4da61dc34a177237
 # ── CSS global ────────────────────────────────────────────────────────────────
 st.markdown(f"""
 <style>
@@ -72,23 +61,13 @@ st.markdown(f"""
 
   /* Header institucional */
   .sedu-header {{
-<<<<<<< HEAD
     background: {TEAL_DARK};
     padding: 14px 22px;
-=======
-    background: linear-gradient(135deg, #0F172A 0%, #164E63 100%);
-    padding: 20px 24px;
->>>>>>> c382a788aecb11f6e1ce22bd4da61dc34a177237
     display: flex;
     align-items: center;
     justify-content: space-between;
     min-height: 60px;
-<<<<<<< HEAD
     border-radius: 10px;
-=======
-    border-radius: 16px;
-    box-shadow: 0 10px 30px rgba(0,0,0,.15);
->>>>>>> c382a788aecb11f6e1ce22bd4da61dc34a177237
   }}
   .sedu-header-left {{
     display: flex;
@@ -154,7 +133,6 @@ st.markdown(f"""
     color: rgba(255,255,255,0.8) !important;
     margin: 2px 0 0 0 !important;
   }}
-<<<<<<< HEAD
   .sedu-banner-chips {{
     margin-left: auto;
     display: flex;
@@ -190,8 +168,6 @@ st.markdown(f"""
     margin-right: 4px;
     vertical-align: middle;
   }}
-=======
->>>>>>> c382a788aecb11f6e1ce22bd4da61dc34a177237
 
   /* Corpo */
   .sedu-body {{
@@ -211,16 +187,11 @@ st.markdown(f"""
   /* Cards de métrica */
   .sedu-cards-grid {{
     display: grid;
-<<<<<<< HEAD
     grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
-=======
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
->>>>>>> c382a788aecb11f6e1ce22bd4da61dc34a177237
     gap: 12px;
     margin-top: 0.25rem;
   }}
   .sedu-card {{
-<<<<<<< HEAD
     position: relative;
     background: #fff;
     border: 0.5px solid #d4e9ee;
@@ -281,20 +252,6 @@ st.markdown(f"""
     font-size: 11px;
     color: {MUTED};
     margin: 8px 0 4px 0;
-=======
-    background: #fff;
-    border: 0.5px solid #d4e9ee;
-    border-radius: 8px;
-    border-top: 3px solid {TEAL};
-    padding: 12px 14px;
-  }}
-  .sedu-card.warn {{ border-top-color: {ROSE}; }}
-  .sedu-card.ok   {{ border-top-color: {GREEN}; }}
-  .sedu-card-label {{
-    font-size: 11px;
-    color: {MUTED};
-    margin: 0 0 4px 0;
->>>>>>> c382a788aecb11f6e1ce22bd4da61dc34a177237
     line-height: 1.3;
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -303,7 +260,6 @@ st.markdown(f"""
     min-height: 2.6em;
   }}
   .sedu-card-value {{
-<<<<<<< HEAD
     position: relative;
     z-index: 1;
     font-size: 26px;
@@ -313,14 +269,6 @@ st.markdown(f"""
     line-height: 1.1;
   }}
   .sedu-card-value.warn {{ color: {PRIO_HIGH}; }}
-=======
-    font-size: 24px;
-    font-weight: 600;
-    color: {TEAL_DARK};
-    margin: 0;
-  }}
-  .sedu-card-value.warn {{ color: {ROSE}; }}
->>>>>>> c382a788aecb11f6e1ce22bd4da61dc34a177237
   .sedu-card-value.ok   {{ color: {GREEN_DARK}; }}
 
   /* Tabela */
@@ -366,26 +314,6 @@ st.markdown(f"""
 </style>
 """, unsafe_allow_html=True)
 
-<<<<<<< HEAD
-=======
-# ── CSS dos KPI cards (estilo painel BI) ──────────────────────────────────────
-st.markdown("""
-<style>
-  .stApp { background-color:#F8FAFC; }
-  .kpi-card {
-    background:white;
-    border-radius:16px;
-    padding:18px;
-    box-shadow:0 2px 12px rgba(0,0,0,.05);
-    border:1px solid #E5E7EB;
-  }
-  .kpi-label { font-size:13px; color:#64748B; margin-bottom:8px; }
-  .kpi-value { font-size:32px; font-weight:700; color:#0F172A; }
-  .kpi-icon  { font-size:22px; }
-</style>
-""", unsafe_allow_html=True)
-
->>>>>>> c382a788aecb11f6e1ce22bd4da61dc34a177237
 
 # ── Dados ─────────────────────────────────────────────────────────────────────
 RESUMO_PATH          = Path(__file__).parent / "dados_graficos" / "resumo.parquet"
@@ -431,16 +359,6 @@ def carregar_dados():
 df = carregar_dados()
 total = int(df["qtd"].sum())
 
-<<<<<<< HEAD
-=======
-# Total de alunos (célula B2 do xlsx) — calculado cedo para uso nos KPIs e no gráfico
-try:
-    _df_xlsx = pd.read_excel(Path(__file__).parent / "dados_graficos" / "dados_graficos.xlsx", header=None)
-    total_alunos = int(_df_xlsx.iloc[1, 1])
-except Exception:
-    total_alunos = int(df["qtd"].max() * 1.15)
-
->>>>>>> c382a788aecb11f6e1ce22bd4da61dc34a177237
 # Última atualização
 from datetime import datetime
 ultima_atualizacao = datetime.now().strftime("%d/%m/%Y %H:%M")
@@ -453,36 +371,12 @@ st.markdown('<div class="sedu-page">', unsafe_allow_html=True)
 ultima_data = datetime.now().strftime("%d/%m/%Y")
 ultima_hora = datetime.now().strftime("%H:%M")
 
-<<<<<<< HEAD
-
-
-import base64
-import os
-
-@st.cache_data
-def get_logo_base64():
-    logo_path = os.path.join(os.path.dirname(__file__), "logo.png")
-    with open(logo_path, "rb") as img_file:
-        return base64.b64encode(img_file.read()).decode()
-
-logo_base64 = get_logo_base64()
-
-
-
-=======
->>>>>>> c382a788aecb11f6e1ce22bd4da61dc34a177237
 st.markdown(f"""
 <div class="sedu-header">
   <div class="sedu-header-left">
     <div class="sedu-header-logo">
-<<<<<<< HEAD
-      <img src='data:image/png;base64,{logo_base64}'
-           alt='Brasão do Governo do Espírito Santo'
-           style='width: 130px; height: 70px; object-fit: contain;' />
-=======
       <img src="https://cdn.es.gov.br/images/logo/governo/brasao/right/Brasao_Governo_240.png"
            alt="Brasão do Governo do Espírito Santo" />
->>>>>>> c382a788aecb11f6e1ce22bd4da61dc34a177237
     </div>
     <div class="sedu-header-divider"></div>
     <div>
@@ -498,7 +392,6 @@ st.markdown(f"""
 """, unsafe_allow_html=True)
 
 
-<<<<<<< HEAD
 # ── Banner ────────────────────────────────────────────────────────────────────
 # Quebra por prioridade para os chips de status
 _qtd_por_prio = df.groupby("prioridade")["qtd"].sum()
@@ -530,51 +423,6 @@ st.markdown(f"""
   </div>
 </div>
 """, unsafe_allow_html=True)
-=======
-# ── KPIs (substitui o banner) ─────────────────────────────────────────────────
-impacto = round((total / total_alunos) * 100, 1) if total_alunos else 0.0
-
-if impacto >= 20:
-    situacao = "🔴 Crítica"
-elif impacto >= 10:
-    situacao = "🟡 Atenção"
-else:
-    situacao = "🟢 Normal"
-
-col1, col2, col3, col4 = st.columns(4)
-
-with col1:
-    st.markdown(f"""
-    <div class="kpi-card">
-        <div class="kpi-label">⚠ Alertas</div>
-        <div class="kpi-value">{total:,}</div>
-    </div>
-    """.replace(",", "."), unsafe_allow_html=True)
-
-with col2:
-    st.markdown(f"""
-    <div class="kpi-card">
-        <div class="kpi-label">👨‍🎓 Alunos</div>
-        <div class="kpi-value">{total_alunos:,}</div>
-    </div>
-    """.replace(",", "."), unsafe_allow_html=True)
-
-with col3:
-    st.markdown(f"""
-    <div class="kpi-card">
-        <div class="kpi-label">📊 Impacto</div>
-        <div class="kpi-value">{impacto}%</div>
-    </div>
-    """, unsafe_allow_html=True)
-
-with col4:
-    st.markdown(f"""
-    <div class="kpi-card">
-        <div class="kpi-label">🚦 Situação</div>
-        <div class="kpi-value" style="font-size:22px">{situacao}</div>
-    </div>
-    """, unsafe_allow_html=True)
->>>>>>> c382a788aecb11f6e1ce22bd4da61dc34a177237
 
 
 # ── Corpo ─────────────────────────────────────────────────────────────────────
@@ -584,24 +432,17 @@ st.markdown('<div class="sedu-body">', unsafe_allow_html=True)
 def _card_cls(prioridade):
     return "warn" if prioridade == "alta" else ("ok" if prioridade == "baixa" and False else "")
 
-<<<<<<< HEAD
 # Mapeia prioridade para classe CSS do card, do valor e do badge
 CARD_CLS  = {"alta": "warn", "média": "", "baixa": "ok"}
 VAL_CLS   = {"alta": "warn", "média": "",  "baixa": "ok"}
 BADGE_CLS = {"alta": "high", "média": "med", "baixa": "low"}
 BADGE_TXT = {"alta": "Alta", "média": "Média", "baixa": "Baixa"}
-=======
-# Mapeia prioridade para classe CSS do card e do valor
-CARD_CLS = {"alta": "warn", "média": "", "baixa": "ok"}
-VAL_CLS  = {"alta": "warn", "média": "",  "baixa": "ok"}
->>>>>>> c382a788aecb11f6e1ce22bd4da61dc34a177237
 
 st.markdown('<p class="sedu-section-title">visão geral</p>', unsafe_allow_html=True)
 
 # Grid responsivo: cards se ajustam à largura disponível e quebram para a
 # próxima linha quando não couberem mais (auto-fill + minmax no CSS).
 cards_html = ['<div class="sedu-cards-grid">']
-<<<<<<< HEAD
 for row in df.itertuples():
     ccls = CARD_CLS[row.prioridade]
     vcls = VAL_CLS[row.prioridade]
@@ -615,30 +456,6 @@ for row in df.itertuples():
         f'<span class="sedu-card-icon">{icon}</span>'
         f'<span class="sedu-card-badge {bcls}">{btxt}</span>'
         f'</div>'
-=======
-
-ICONS = {
-    "Datas de Matrícula Alterada":            "📅",
-    "Ausência e retorno (freq. io-iô)":       "⚠️",
-    "Alunos Desenturmado":                    "🎓",
-    "Matrícula Retroativa":                   "📝",
-    "Alunos com ID Alterado":                 "🆔",
-    "Alunos sem CPF":                         "📄",
-    "Sem Autodeclaração Racial":              "👤",
-    "Flag Deficiência sem Descrição":         "♿",
-    "Descrição de Deficiência Inconsistente": "🔍",
-    "Matrículas Duplicadas":                  "📚",
-}
-
-for row in df.itertuples():
-    ccls = CARD_CLS[row.prioridade]
-    vcls = VAL_CLS[row.prioridade]
-    valor_fmt = f"{row.qtd:,}".replace(",", ".")
-    icone = ICONS.get(row.alerta, "📌")
-    cards_html.append(
-        f'<div class="sedu-card {ccls}">'
-        f'<div style="font-size:22px;margin-bottom:8px;">{icone}</div>'
->>>>>>> c382a788aecb11f6e1ce22bd4da61dc34a177237
         f'<p class="sedu-card-label" title="{row.alerta}">{row.alerta}</p>'
         f'<p class="sedu-card-value {vcls}">{valor_fmt}</p>'
         f'</div>'
@@ -650,7 +467,6 @@ st.markdown("".join(cards_html), unsafe_allow_html=True)
 # Seção: gráfico
 st.markdown('<p class="sedu-section-title" style="margin-top:1.5rem;">total de alertas por categoria</p>', unsafe_allow_html=True)
 
-<<<<<<< HEAD
 # Lê total de alunos da célula B2 do xlsx
 try:
     _df_xlsx = pd.read_excel(Path(__file__).parent / "dados_graficos" / "dados_graficos.xlsx", header=None)
@@ -660,10 +476,6 @@ except Exception:
 
 bar_colors = [
     PRIO_HIGH if p == "alta" else (PRIO_MED if p == "média" else PRIO_LOW)
-=======
-bar_colors = [
-    ROSE if p == "alta" else (TEAL if p == "média" else GREEN)
->>>>>>> c382a788aecb11f6e1ce22bd4da61dc34a177237
     for p in df["prioridade"]
 ]
 
@@ -671,7 +483,6 @@ fig = go.Figure(go.Bar(
     x=df["qtd"],
     y=df["alerta"],
     orientation="h",
-<<<<<<< HEAD
     marker=dict(
         color=bar_colors,
         line=dict(width=0),
@@ -682,12 +493,6 @@ fig = go.Figure(go.Bar(
     textfont=dict(size=12, color=TEXT),
     customdata=df["pct"],
     hovertemplate="<b>%{y}</b><br>%{x:,} alertas · %{customdata:.1f}% do total<extra></extra>",
-=======
-    marker=dict(color=bar_colors, line=dict(width=0)),
-    text=[f"{v:,}".replace(",", ".") for v in df["qtd"]],
-    textposition="outside",
-    hovertemplate="<b>%{y}</b><br>%{x:,}<extra></extra>",
->>>>>>> c382a788aecb11f6e1ce22bd4da61dc34a177237
 ))
 
 fig.update_layout(
@@ -719,15 +524,9 @@ total_fmt = f"{total_alunos:,}".replace(",", ".")
 legend_html = f"""
 <div style="display:flex; align-items:center; justify-content:space-between;">
   <div style="display:flex; gap:18px; font-size:12px; color:{MUTED};">
-<<<<<<< HEAD
     <span><span style="display:inline-block; width:10px; height:10px; border-radius:2px; background:{PRIO_HIGH}; margin-right:5px; vertical-align:middle;"></span>Alta prioridade</span>
     <span><span style="display:inline-block; width:10px; height:10px; border-radius:2px; background:{PRIO_MED}; margin-right:5px; vertical-align:middle;"></span>Média prioridade</span>
     <span><span style="display:inline-block; width:10px; height:10px; border-radius:2px; background:{PRIO_LOW}; margin-right:5px; vertical-align:middle;"></span>Baixa prioridade</span>
-=======
-    <span><span style="display:inline-block; width:10px; height:10px; border-radius:2px; background:{ROSE}; margin-right:5px; vertical-align:middle;"></span>Alta prioridade</span>
-    <span><span style="display:inline-block; width:10px; height:10px; border-radius:2px; background:{TEAL}; margin-right:5px; vertical-align:middle;"></span>Média prioridade</span>
-    <span><span style="display:inline-block; width:10px; height:10px; border-radius:2px; background:{GREEN}; margin-right:5px; vertical-align:middle;"></span>Baixa prioridade</span>
->>>>>>> c382a788aecb11f6e1ce22bd4da61dc34a177237
   </div>
   <div style="display:flex; flex-direction:column; align-items:flex-end; border-left:2px solid {TEAL_LIGHT}; padding-left:16px;">
     <span style="font-size:10px; font-weight:600; letter-spacing:0.06em; text-transform:uppercase; color:{MUTED};">Total de alunos</span>
@@ -737,110 +536,6 @@ legend_html = f"""
 """
 st.markdown(f'<div style="background:#fff; border:0.5px solid #d4e9ee; border-radius:10px; padding:14px 18px;">{legend_html}</div>', unsafe_allow_html=True)
 st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
-
-
-<<<<<<< HEAD
-
-######################### OPEN GRAFICO TEMPORAL ##############################################
-
-st.markdown('<p class="sedu-section-title" style="margin-top:1.5rem; margin-bottom:-0.5rem;">Quantidade de alunos por tipo de saída</p>', unsafe_allow_html=True)
-
-# ========================================
-# 1. PARQUET (pesado) -> Polars com lazy scan + filtro + agregação por mês
-# ========================================
-parquet_agg = (
-    pl.scan_parquet('dados_graficos/resultados.parquet')          # lazy: não carrega tudo na memória
-    .filter(pl.col('alerta') == 'Frequência io-iô')
-    .select([
-        pl.col('data_retorno').cast(pl.Date).dt.truncate('1mo').alias('mes'),  # normaliza pro 1º dia do mês
-    ])
-    .group_by('mes')
-    .agg(pl.len().alias('quantidade'))
-    .with_columns(pl.lit('Frequência io-iô').alias('tipo'))
-    .collect()                                                      # só agora executa
-)
-
-# ========================================
-# 2. EXCEL (pequeno) -> Polars, agregado por mês
-# ========================================
-excel_agg = (
-    pl.from_pandas(pd.read_parquet('grafico_temporal/base_temporal_alunos.parquet'))
-    .with_columns(
-        pl.col('data_referencia').cast(pl.Date).dt.truncate('1mo').alias('mes')
-    )
-    .group_by(['mes', 'tipo'])
-    .agg(pl.len().alias('quantidade'))
-)
-
-# ========================================
-# 3. CONCATENAR (mesmo schema: mes, tipo, quantidade)
-# ========================================
-df_final = pl.concat([
-    excel_agg.select(['mes', 'tipo', 'quantidade']),
-    parquet_agg.select(['mes', 'tipo', 'quantidade'])
-])
-
-# ========================================
-# 4. PIVOTAR
-# ========================================
-df_pivot = (
-    df_final
-    .pivot(index='mes', on='tipo', values='quantidade', aggregate_function='sum')
-    .fill_null(0)
-    .sort('mes')
-)
-
-# ========================================
-# 5. GRÁFICO (Plotly aceita as colunas direto)
-# ========================================
-cores = {
-    'Sumiu': '#636EFA',
-    'Abandono': '#EF553B',
-    'Transferência': '#00CC96',
-    'Frequência io-iô': '#AB63FA'
-}
-
-colunas_desejadas = ['Sumiu', 'Abandono', 'Transferência', 'Frequência io-iô']
-meses = df_pivot['mes'].to_list()
-
-fig = go.Figure()
-
-for tipo in colunas_desejadas:
-    if tipo in df_pivot.columns:
-        fig.add_trace(go.Scatter(
-            x=meses,
-            y=df_pivot[tipo].to_list(),
-            mode='lines+markers',
-            name=tipo,
-            line=dict(color=cores.get(tipo, '#000000'), width=2.5),
-            marker=dict(size=7)
-        ))
-
-# ========================================
-# 6. LAYOUT
-# ========================================
-=======
-# ── Donut: distribuição das prioridades ───────────────────────────────────────
-st.markdown('<p class="sedu-section-title">distribuição das prioridades</p>', unsafe_allow_html=True)
-
-prioridades = df.groupby("prioridade")["qtd"].sum().reset_index()
-
-cores = {"alta": "#EF4444", "média": "#F59E0B", "baixa": "#10B981"}
-
-fig_donut = go.Figure(go.Pie(
-    labels=prioridades["prioridade"],
-    values=prioridades["qtd"],
-    hole=0.70,
-    marker=dict(colors=[cores.get(p, "#94A3B8") for p in prioridades["prioridade"]]),
-))
-fig_donut.update_layout(
-    height=450,
-    paper_bgcolor="white",
-    plot_bgcolor="white",
-    margin=dict(t=20, b=20, l=20, r=20),
-    showlegend=True,
-)
-st.plotly_chart(fig_donut, use_container_width=True)
 
 
 
@@ -877,34 +572,16 @@ for tipo in df_pivot.columns:
     ))
 
 # LAYOUT
->>>>>>> c382a788aecb11f6e1ce22bd4da61dc34a177237
 fig.update_layout(
     xaxis_title='Mês/Ano',
     yaxis_title='Quantidade de Alunos',
     hovermode='x unified',
-<<<<<<< HEAD
-    template='plotly_white',
-=======
     template='plotly',
->>>>>>> c382a788aecb11f6e1ce22bd4da61dc34a177237
     height=600,
     plot_bgcolor='white',
     paper_bgcolor='white',
     font=dict(color='#000000'),
     xaxis=dict(
-<<<<<<< HEAD
-        showgrid=True, gridwidth=1, gridcolor='#E5E5E5',
-        tickformat='%b/%Y',
-        title_font=dict(color='#000000'), tickfont=dict(color='#000000')
-    ),
-    yaxis=dict(
-        showgrid=True, gridwidth=1, gridcolor='#E5E5E5',
-        title_font=dict(color='#000000'), tickfont=dict(color='#000000')
-    ),
-    legend=dict(
-        x=0.98, y=0.98,
-        bgcolor='rgba(255,255,255,0.9)', bordercolor='black', borderwidth=1,
-=======
         showgrid=True, 
         gridwidth=1, 
         gridcolor='#E5E5E5',
@@ -924,24 +601,11 @@ fig.update_layout(
         bgcolor='rgba(255,255,255,0.9)',
         bordercolor='black',
         borderwidth=1,
->>>>>>> c382a788aecb11f6e1ce22bd4da61dc34a177237
         font=dict(color='#000000')
     ),
     margin=dict(l=60, r=60, t=80, b=60)
 )
 
-<<<<<<< HEAD
-fig.add_shape(
-    type='rect', xref='paper', yref='paper',
-    x0=0, y0=0, x1=1, y1=1,
-    line=dict(color='#E5E5E5', width=2),
-    fillcolor='rgba(0,0,0,0)', layer='below'
-)
-
-# ========================================
-# 7. EXIBIR
-# ========================================
-=======
 # Adicionar borda
 fig.add_shape(
     type='rect',
@@ -957,7 +621,6 @@ fig.add_shape(
 )
 
 # EXIBIR NO STREAMLIT
->>>>>>> c382a788aecb11f6e1ce22bd4da61dc34a177237
 st.markdown("""
     <style>
         [data-testid="stPlotlyChart"] div {
@@ -968,22 +631,13 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-<<<<<<< HEAD
-=======
 
->>>>>>> c382a788aecb11f6e1ce22bd4da61dc34a177237
 st.plotly_chart(fig, use_container_width=True)
 
 
 ########################### CLOSE GRAFICO TEMPORAL############################################
 
 ##########  OPEN GRAFICO SANKEY  ###########################
-<<<<<<< HEAD
-
-st.markdown('<p class="sedu-section-title" style="margin-top:1.5rem; margin-bottom:-0.5rem;">MIGRAÇÃO DE AUTODECLARAÇÃO POR ALUNOS</p>', unsafe_allow_html=True)
-
-=======
->>>>>>> c382a788aecb11f6e1ce22bd4da61dc34a177237
 with open('sankey/sankey_visual_v2.html', 'r', encoding='utf-8') as f:
     html_content = f.read()
 
@@ -1004,11 +658,8 @@ components.html(html_estilizado, height=850, scrolling=False)
 ##########  FECHAR GRAFICO SANKEY  ###########################
 
 # ── Seção: detalhamento por aluno (resultados.parquet) ───────────────────────
-<<<<<<< HEAD
 st.markdown('<p class="sedu-section-title" style="margin-top:1.5rem;">detalhamento</p>', unsafe_allow_html=True)
 
-=======
->>>>>>> c382a788aecb11f6e1ce22bd4da61dc34a177237
 PARQUET_RESULTADOS = Path(__file__).parent / "dados_graficos" / "resultados.parquet"
 
 COLUNAS_EXIBIR = [
@@ -1028,41 +679,6 @@ def carregar_resultados():
 
 df_res = carregar_resultados()
 
-<<<<<<< HEAD
-=======
-# ── Ranking de escolas ────────────────────────────────────────────────────────
-if "nm_escola" in df_res.columns:
-    st.markdown('<p class="sedu-section-title">ranking de escolas</p>', unsafe_allow_html=True)
-
-    ranking = (
-        df_res
-        .groupby("nm_escola")
-        .size()
-        .reset_index(name="alertas")
-        .sort_values("alertas", ascending=False)
-        .head(15)
-    )
-
-    fig_rank = go.Figure()
-    fig_rank.add_trace(go.Bar(
-        x=ranking["alertas"],
-        y=ranking["nm_escola"],
-        orientation="h",
-        text=ranking["alertas"],
-        textposition="outside",
-    ))
-    fig_rank.update_layout(
-        height=500,
-        template="plotly_white",
-        yaxis=dict(autorange="reversed"),
-        title="Top 15 Escolas com Mais Alertas",
-    )
-    st.plotly_chart(fig_rank, use_container_width=True)
-
-# ── Detalhamento ──────────────────────────────────────────────────────────────
-st.markdown('<p class="sedu-section-title" style="margin-top:1.5rem;">detalhamento</p>', unsafe_allow_html=True)
-
->>>>>>> c382a788aecb11f6e1ce22bd4da61dc34a177237
 # ── Filtros encadeados ────────────────────────────────────────────────────────
 col_f1, col_f2, col_f3, col_dl = st.columns([2, 2, 3, 1])
 
