@@ -8,3 +8,9 @@ __pycache__/
 *.csv
 temp/
 dados/EMPILHADO_MATRICULAS.parquet
+
+# Excecoes - pastas de graficos
+!sankey/*.html
+!sankey/*.ipynb
+!grafico_temporal/*.ipynb
+!dados_graficos/*.ipynb
