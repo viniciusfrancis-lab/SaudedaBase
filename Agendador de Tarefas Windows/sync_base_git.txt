@@ -1,0 +1,15 @@
+Para agendar no Task Scheduler agora:
+
+Win + R → taskschd.msc
+Criar Tarefa Básica
+Nome: Sync dados_graficos
+Gatilho: Diariamente (ou no horário que preferir)
+Ação: Iniciar um programa
+
+Programa: cmd.exe
+Argumentos: /c "C:\Users\vfpaula\Downloads\sincronizar_dados_graficos.bat"
+
+
+Finalize e salve
+
+Quer que eu ajuste o script para rodar silenciosamente (sem abrir janela) quando agendado?

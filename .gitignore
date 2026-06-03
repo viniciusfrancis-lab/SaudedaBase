@@ -1,0 +1,10 @@
+# Dados e arquivos gerados 
+*.parquet 
+*.xlsx 
+*.csv 
+temp/ 
+__pycache__/ 
+*.pyc 
+.env 
+resultados.parquet 
+resumo.parquet 

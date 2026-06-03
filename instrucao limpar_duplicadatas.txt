@@ -1,0 +1,16 @@
+1. Teste primeiro (DRY-RUN - não altera nada):
+python limpar_duplicatas_ultima_aparicao.py --dry-run
+
+✅ Mostrar quantos registros seriam removidos
+✅ Mostrar exemplos de alunos afetados
+✅ Mostrar estatísticas antes/depois
+❌ NÃO modifica o arquivo
+
+
+
+2. Depois, aplica de verdade:
+python limpar_duplicatas_ultima_aparicao.py
+
+✅ Criar backup automático (resultados_backup_YYYYMMDD_HHMMSS.parquet)
+✅ Remover os registros duplicados
+✅ Salvar o arquivo limpo
